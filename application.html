@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Apply-ZIZMU Software Solutions</title>
+  <title>Apply-Zizmu Software Solutions</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -49,13 +49,13 @@
         <div class="form-header">
           <a href="index.html" ><img class="m-3" src="assets/img/Logo final.png" alt=""></a>
           <h2 class="companyName">Apply for the Job</h2>
-          <!-- <h1 class="companyName">ZIZMU</h1> -->
+          <!-- <h1 class="companyName">Zizmu</h1> -->
           
         </div>
-        <form id="ZIZMU">
+        <form onsubmit="sendEmail(); reset(); return false">
           <div class="form-group">
             <label for="fullname">Full Name:</label>
-            <input placeholder="Enter Your Full Name" class="form-control" type="text" id="fullname" name="fullname" required>
+            <input placeholder="Enter Your Full Name" class="form-control" type="text" id="name" name="fullname" required>
           </div>
           <div class="form-group">
             <label for="phone">Phone Number:</label>
@@ -80,12 +80,62 @@
           </div>
           <div class="form-group">
             <label for="resume">Upload Resume:</label>
-            <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+            <!-- <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required> -->
+            <input type="text" id="resume" name="resume" placeholder="Insert Google Drive Link" required>
           </div>
           <button type="submit">Submit</button>
         </form>
     </div>
     <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
     <script src="application.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script>
+        function sendEmail(){
+        let name = document.getElementById("name").value;
+        let phone = document.getElementById("phone").value;
+        let email = document.getElementById("email").value;
+        let skills = document.getElementById("skills").value;
+        // let Address = document.getElementById("Address").value;
+        // let pincode = document.getElementById("pincode").value;
+        let resume = document.getElementById("resume").value;
+
+        if (!isGoogleDriveLink(resume)) {
+          alert("Please enter a valid Google Drive link for the resume.");
+          return;
+        }
+
+        // Regular expression pattern to match Google Drive links
+        function isGoogleDriveLink(link) {
+          const googleDrivePattern =  /^https?:\/\/docs\.google\.com\/(?:document\/d\/|open\?id=)([a-zA-Z0-9_-]+)/;
+          return googleDrivePattern.test(link);
+        }
+
+
+
+        let body = "Name: " + name + "<br/> Phone Number: " + phone + "<br/> Email: " + email +  "<br/> Skills: " + skills + "<br/> Resume: " + resume;
+        
+        // var loader = document.getElementById("pre-loader");
+        // loader.style.display = "block"; // show loader
+        
+        Email.send({
+            Host : "smtp.elasticemail.com",
+            Username : "john.web2301@gmail.com",
+            Password : "AE3F4D82676CC2D6687192C823785D4E86DF",
+            To : "hrm@zizmu.in",
+            From : "john.web2301@gmail.com",
+            Subject : "New candidate seeks job opportunity.",
+            Body : body,
+        }).then(
+            message => {
+            // loader.style.display = "none"; // hide loader
+            if (message === 'OK') {
+                alert("We have received your application and will be in touch shortly.");
+            } else {
+                alert("Oops! There might be a server issue, Please try again later.");
+            }
+            }
+        );
+        }
+    </script>
       
 </body>
